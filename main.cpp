@@ -18,6 +18,8 @@ class Student
     int getStudentMark();
     void setStudent(int index, int mark);
     int getStudentId();
+    
+
     // void displayStudent();
 };
 
@@ -53,7 +55,20 @@ class Subject
     int getNoOfStudent();
     string getSubjectId();
     int getSummary();
+    float getAvgGrade(char grade);
 };
+float Subject::getAvgGrade(char grade){
+    int count=0;
+    
+    for(int i=0;i<this->getNoOfStudent();i++){
+        if(this->arrayOfStudent[i].getAverage()==grade){
+            // cout << this->arrayOfStudent[i].getStudentId()<<"\t"<<this->arrayOfStudent[i].getAverage()<<endl;
+            count++;    
+        }
+    }
+
+    return (count / (float)this->getNoOfStudent()) * 100;
+}
 int Subject::getSummary()
 {
     int total = 0;
@@ -69,17 +84,18 @@ string Subject::getSubjectId()
 }
 void Subject::displayStudent(int id)
 {
-
+    // int flag=0;
     for (int i = 0; i < this->getNoOfStudent(); i++)
     {
 
         if (this->arrayOfStudent[i].getStudentId() == id)
         {
+            // flag=1;
             cout << this->subjectID << "\t\t\t" << this->arrayOfStudent[i].getStudentMark() << endl;
             break;
         }
     }
-    // cout<<"a"       <<endl;
+    //   if(flag==0) cout<<"Wrong Subject ID"<<endl;
 }
 int Subject::getNoOfStudent()
 {
@@ -129,6 +145,7 @@ int Student::getStudentMark()
 
 void displaySubject(Subject array[])
 {
+    int flag=0;
     system("cls");
     string id;
     cout << "Enter Subject Code   :" << endl;
@@ -140,10 +157,12 @@ void displaySubject(Subject array[])
     {
         if (id == array[i].getSubjectId())
         {
+            flag=1;
             array[i].displaySubject();
             break;
         }
     }
+    if(flag==0) cout<<"Wrong Subject ID"<<endl;
 }
 
 void displayStudent(Subject array[])
@@ -161,9 +180,10 @@ void displayStudent(Subject array[])
         }
         else
             return;
-        // cout<<i;
+        
     }
-    // cout<<"b"<<endl;
+
+    
 }
 
 void displaySubjectSummary(Subject array[])
@@ -213,28 +233,34 @@ void readFile(Subject array[])
         }
     }
 }
-// void saveSummaries(Subject array[]){
 
-//     ofstream file("summdata.txt");
+void saveSummaries(Subject array[]){
 
-//     if (!file.is_open())
-//     {
-//         cout << "CANNOT CREATE FILE" << endl;
-//         exit(1);
-//     }
-//     else{
+    ofstream file("summdata.txt");
 
-//             for (int i = 0; i < MAXSUBJECT; i++){
-//                 if (array[i].getNoOfStudent() > 0)
-//                 {
-//                     cout << array[i].getSubjectId() << "\t\t\t" << array[i].getSummary() << endl;
-//                 }
-//                 else
-//                    return;
-//             // array[i].getSummary();
-//         }
-//     }
-// }
+    if (!file.is_open())
+    {
+        cout << "CANNOT CREATE FILE" << endl;
+        exit(1);
+    }
+    else{
+        // char temp[5];
+            for (int i = 0; i < MAXSUBJECT; i++){
+
+                if (array[i].getNoOfStudent() > 0)
+                {
+                    file << array[i].getSubjectId() << "\t" << array[i].getNoOfStudent()<< " A " << array[i].getAvgGrade('A') <<"% "
+                         << " B " << array[i].getAvgGrade('B') << "% "
+                         << " C " << array[i].getAvgGrade('C') << "% "
+                         << " D " << array[i].getAvgGrade('D') << "% "
+                         << " E " << array[i].getAvgGrade('E')<<"% "<<endl;
+                }
+                else
+                   return;
+            // array[i].getSummary();
+        }
+    }
+}
 int main()
 {
 
@@ -272,7 +298,12 @@ int main()
             system("pause");
             system("cls");
             break;
-        // case    4:  saveSummaries(array);break;
+        case    4:  saveSummaries(array);
+            system("cls");
+        cout<<"\nSucessfully created the summary file"<<endl;
+            system("pause");
+            system("cls");
+            break;
         }
     }
 
